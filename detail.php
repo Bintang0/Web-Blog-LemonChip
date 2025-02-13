@@ -1,17 +1,6 @@
+<?php require('functions.php') ?>
+
 <?php
-// Connect to the database
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "kpl";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
 // Get the ID from the URL
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
@@ -37,6 +26,9 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($row['judul']); ?></title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+   
+    </style>
 </head>
 <body>
     <!-- NAVBAR -->
@@ -61,9 +53,10 @@ $conn->close();
       </ul>
     </nav>
     <div class="container mt-5">
-        <h1 class="h2"><?php echo htmlspecialchars($row['judul']); ?></h1>
+    <a href="index.php" class="" style="text-decoration: none;"><svg xmlns="http://www.w3.org/2000/svg" height="20" width="15.5" viewBox="0 0 448 512" style="margin-right: 10px;"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>Kembali ke Beranda</a>
+        <h1 class="h2" style="margin-top: 30px;"><?php echo htmlspecialchars($row['judul']); ?></h1>
         <p><small><?php echo htmlspecialchars($row['tanggal']); ?></small></p>
-        <img src="uploads/<?php echo htmlspecialchars($row['gambar']); ?>" class="img-fluid" alt="<?php echo htmlspecialchars($row['judul']); ?>">
+        <img src="img/<?php echo htmlspecialchars($row['gambar']); ?>" class="img-fluid" alt="<?php echo htmlspecialchars($row['judul']); ?>">
         <p><?php echo nl2br(htmlspecialchars($row['isi'])); ?></p>
 
         <div class="comments mt-5">
@@ -80,7 +73,7 @@ $conn->close();
             <!-- Display comments -->
             <?php
             // Connect to the database again to fetch comments
-            $conn = new mysqli($servername, $username, $password, $dbname);
+            $conn = new mysqli('localhost', 'root', '', 'kpl');
             $sql = "SELECT * FROM comments WHERE artikel_id = $id ORDER BY tanggal DESC";
             $result = $conn->query($sql);
 
@@ -99,9 +92,14 @@ $conn->close();
             ?>
         </div>
     </div>
+
+    <!-- Button to go back to index.php -->
+<!-- Button to go back to index.php -->
+
+
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-``` ▋
