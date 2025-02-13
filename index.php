@@ -10,7 +10,7 @@
             font-family: 'Roboto', sans-serif;
         }
         .carousel-item img {
-            width: 100%;
+            width: 1000px;
             height: 500px;
             aspect-ratio: 16 / 9; /* Rasio aspek 16:9 */
             object-fit: cover;
@@ -26,7 +26,8 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg" style="background-color: #343a40;">
   <div class="container-fluid">
-    <a class="navbar-brand" href="" style="color: #ffffff;">Navbar</a>
+    <!-- <a class= "navbar-brand" href="" style="color: #ffffff;"></a> -->
+    <img src="img/LogoLemonChip.png" alt="" width="65">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -36,7 +37,7 @@
           <a class="nav-link active" aria-current="page" href="#" style="color: #f8f9fa;">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" style="color: #f8f9fa;">Link</a>
+          <a class="nav-link" href="#" style="color: #f8f9fa;">Blog</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="" style="color: #f8f9fa;">About</a>
@@ -67,7 +68,7 @@
     <li><a class="dropdown-item" href="#">Settings</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="#">Logout</a></li>
-  </ul>
+  </ul>
     </div>
   </div>
 </nav>
@@ -75,16 +76,16 @@
 
 
     <!-- CAROUSEL -->
-<div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel" style="width: 90%; margin: auto;">
+<div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel" style="width: 90%; margin: auto; padding-top: 5px;">
   <div class="carousel-inner">
     <div class="carousel-item active" data-bs-interval="5000">
-      <img src="img/unpas.jpg" class="d-block w-100" alt="...">
+      <img src="img/1.jpg" class="d-block w-100" alt="...">
     </div>
     <div class="carousel-item" data-bs-interval="3000">
-      <img src="img/if.png" class="d-block w-100" alt="...">
+      <img src="img/2.jpg" class="d-block w-100" alt="...">
     </div>
     <div class="carousel-item">
-      <img src="img/hmtif.png" class="d-block w-100" alt="...">
+      <img src="img/3.jpg" class="d-block w-100" alt="...">
     </div>
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
@@ -104,22 +105,22 @@
     <!-- Card pertama -->
     <div class="card" style="width: 60%; margin: 0; margin-top: 10px; margin-bottom: 10px;">
         <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+          <img src="img/if.png" class="d-block w-50" alt="">
+            <h5 class="card-title">Judul Artikel</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">tanggal artikel</h6>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
+            <a class="btn btn-primary" role="button" aria-disabled="true">Read More</a>
         </div>
     </div>
     <!-- List group kedua -->
     <div class="list-group" style="width: 18rem; margin-top: 10px; margin-bottom: 10px;">
         <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
-            The current link item
+            Category
         </a>
-        <a href="#" class="list-group-item list-group-item-action">A second link item</a>
-        <a href="#" class="list-group-item list-group-item-action">A third link item</a>
-        <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
-        <a class="list-group-item list-group-item-action disabled" aria-disabled="true">A disabled link item</a>
+        <a href="#" class="list-group-item list-group-item-action">A link item 1</a>
+        <a href="#" class="list-group-item list-group-item-action">A link item 2</a>
+        <a href="#" class="list-group-item list-group-item-action">A link item 3</a>
+        <a href="#" class="list-group-item list-group-item-action">A link item 4</a>
     </div>
 </div>
 
