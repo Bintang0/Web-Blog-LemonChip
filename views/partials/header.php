@@ -24,6 +24,9 @@ if (isset($_GET['logout'])) {
   <style>
       body {
           font-family: 'Roboto', sans-serif;
+          min-height: 100vh; /* Pastikan body memiliki tinggi minimal 100% viewport height */
+    display: flex;
+    flex-direction: column;
       }
       .carousel-item img {
           width: 1000px;
@@ -35,6 +38,10 @@ if (isset($_GET['logout'])) {
       .navbar {
           background-color: #343a40;
       }
+
+      .container {
+    flex: 1; /* Menyusun container agar mengambil ruang yang tersisa */
+}
 
   </style>
 </head>
@@ -50,13 +57,13 @@ if (isset($_GET['logout'])) {
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="#" style="color: #f8f9fa;">Home</a>
+        <a class="nav-link active" aria-current="page" href="index.php" style="color: #f8f9fa;">Home</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#" style="color: #f8f9fa;">Blog</a>
       </li>
       <li class="nav-item">
-          <a class="nav-link" href="" style="color: #f8f9fa;">About</a>
+          <a class="nav-link" href="about.php" style="color: #f8f9fa;">About</a>
       </li>
     </ul>
     <!-- Tombol Pencarian -->

@@ -1,6 +1,6 @@
 <?php require ('functions.php');?>
 <?php 
-$all = query('SELECT * FROM artikel') ?>
+$all = query('SELECT * FROM artikel ORDER BY tanggal DESC') ?>
 
 <?php require('views/partials/header.php') ?>
 
@@ -31,7 +31,7 @@ $all = query('SELECT * FROM artikel') ?>
 
 
 <!-- ARTIKEL -->
-<h1 style="margin-top: 10px; margin-bottom: 10px; border-bottom: black 1px solid; width: 90%; margin: auto;">Artikel</h1>
+<h1 style="margin-top: 10px; margin-bottom: 10px; border-bottom: black 1px solid; width: 90%; margin: auto;">Artikel Terbaru</h1>
 <div class="bungkus-artikel" style="display: flex; justify-content: center; align-items: flex-start; margin-bottom: 20px;">
     <!-- Card pertama (diatur vertikal) -->
     <div style="display: flex; flex-direction: column; width: 40%; margin-top: 10px; margin-bottom: 10px;">
