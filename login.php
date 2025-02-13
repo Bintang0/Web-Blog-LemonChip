@@ -1,3 +1,35 @@
+<?php 
+
+require 'functions.php';
+session_start();
+
+if (isset($_SESSION['login'])) {
+  header('Location: index.php');
+  exit;
+}
+
+if(isset($_POST["login"])) {
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+  
+    $result = mysqli_query($conn, "SELECT * FROM user WHERE email = '$email' ");
+  
+    // cek email
+    if(mysqli_num_rows($result) === 1) {
+  
+      // cek password
+      $row = mysqli_fetch_assoc($result);
+      if( password_verify($password, $row["password"])) {
+        $_SESSION['login'] = true;
+        header('Location: index.php');
+        exit;
+      }
+  }
+  $error = true;
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en" class="h-full bg-white">
 
@@ -16,7 +48,11 @@
         </div>
 
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form class="space-y-6" action="#" method="POST">
+            <?php if( isset($error)) : ?>
+            <p style="color: red;">username / password salah!</p>
+            <?php endif; ?>
+
+            <form class="space-y-6" action="" method="POST">
                 <div>
                     <label for="email" class="block text-sm/6 font-medium text-gray-900">Email</label>
                     <div class="mt-2">
@@ -36,7 +72,7 @@
                 </div>
 
                 <div>
-                    <button type="submit"
+                    <button type="submit" name="login"
                         class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">Masuk</button>
                 </div>
             </form>
