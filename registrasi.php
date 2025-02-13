@@ -1,10 +1,27 @@
+<?php 
+require 'functions.php';
+if (isset($_POST['register'])) {
+  if (registrasi($_POST) > 0) {
+    echo "<script>
+          alert('User Baru Berhasil Ditambahkan');
+          document.location.href = 'login.php';
+          </script>         
+          ";
+  } else {
+    echo mysqli_error($conn);
+  }
+}
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en" class="h-full bg-white">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Daftar</title>
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 </head>
 
@@ -16,7 +33,7 @@
         </div>
 
         <div class="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form class="space-y-6" action="#" method="POST">
+            <form class="space-y-6" method="POST">
                 <div>
                     <label for="nama" class="block text-sm/6 font-medium text-gray-900">Nama</label>
                     <div class="mt-2">
@@ -52,9 +69,8 @@
                 </div>
 
                 <div>
-                    <button type="submit"
-                        class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">Sign
-                        in</button>
+                    <button type="submit" name="register"
+                        class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">Daftar</button>
                 </div>
             </form>
 
