@@ -1,3 +1,7 @@
+<?php require('views/partials/functions.php') ?>
+<?php 
+$all = query('SELECT * FROM artikel') ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +28,7 @@
 </head>
 <body>
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg" style="background-color: #343a40;">
+<nav class="navbar navbar-expand-lg" style="background-color: #343a40;">
   <div class="container-fluid">
     <!-- <a class= "navbar-brand" href="" style="color: #ffffff;"></a> -->
     <img src="img/LogoLemonChip.png" alt="" width="65">
@@ -68,7 +72,7 @@
     <li><a class="dropdown-item" href="#">Settings</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="#">Logout</a></li>
-  </ul>
+  </ul>
     </div>
   </div>
 </nav>
@@ -101,19 +105,25 @@
 
 <!-- ARTIKEL -->
 <h1 style="margin-top: 10px; margin-bottom: 10px; border-bottom: black 1px solid; width: 90%; margin: auto;">Artikel</h1>
-<div class="bungkus-artikel" style="display: flex; justify-content: space-around; align-items: flex-start;">
-    <!-- Card pertama -->
-    <div class="card" style="width: 60%; margin: 0; margin-top: 10px; margin-bottom: 10px;">
-        <div class="card-body">
-          <img src="img/if.png" class="d-block w-50" alt="">
-            <h5 class="card-title">Judul Artikel</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">tanggal artikel</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a class="btn btn-primary" role="button" aria-disabled="true">Read More</a>
+<div class="bungkus-artikel" style="display: flex; justify-content: center; align-items: flex-start; margin-bottom: 20px;">
+    <!-- Card pertama (diatur vertikal) -->
+    <div style="display: flex; flex-direction: column; width: 40%; margin-top: 10px; margin-bottom: 10px;">
+        <?php foreach($all as $alls) { ?>
+        <div class="card" style="width: 100%; margin-top: 10px; margin-bottom: 10px;">
+            <div class="card-body">
+              <!-- Menambahkan style object-fit untuk gambar -->
+              <img src="img/<?= $alls["gambar"] ;?>" class="d-block w-100" alt="" style="object-fit: cover; width: 500px; height: 200px;">
+                <h5 class="card-title"><?= $alls["judul"] ;?></h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary"><?= $alls["tanggal"] ;?></h6>
+                <p class="card-text"><?= $alls["isi"] ;?></p>
+                <a class="btn btn-primary" role="button" aria-disabled="true">Read More</a>
+            </div>
         </div>
+        <?php } ?>
     </div>
-    <!-- List group kedua -->
-    <div class="list-group" style="width: 18rem; margin-top: 10px; margin-bottom: 10px;">
+
+    <!-- List group satu (di sebelah kanan card) -->
+    <div class="list-group" style="width: 18rem; margin-left: 20px; margin-top: 10px; margin-bottom: 10px;">
         <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
             Category
         </a>
@@ -123,6 +133,7 @@
         <a href="#" class="list-group-item list-group-item-action">A link item 4</a>
     </div>
 </div>
+
 
 
 
