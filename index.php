@@ -1,4 +1,4 @@
-<?php require('views/partials/functions.php') ?>
+<?php require 'functions.php'?>
 <?php 
 $all = query('SELECT * FROM artikel') ?>
 
@@ -70,6 +70,7 @@ $all = query('SELECT * FROM artikel') ?>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
     <li><a class="dropdown-item" href="#">Profile</a></li>
     <li><a class="dropdown-item" href="#">Settings</a></li>
+    <li><a class="dropdown-item" href="login.php">Login</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="#">Logout</a></li>
   </ul>
@@ -133,6 +134,9 @@ $all = query('SELECT * FROM artikel') ?>
         <a href="#" class="list-group-item list-group-item-action">A link item 4</a>
     </div>
 </div>
+
+
+
 
 
 
