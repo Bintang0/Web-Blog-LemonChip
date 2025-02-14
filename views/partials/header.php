@@ -19,6 +19,7 @@ if (isset($_GET['logout'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CHIP BLOG</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
   <style>
       body {
           font-family: 'Roboto', sans-serif;
@@ -41,13 +42,50 @@ if (isset($_GET['logout'])) {
     flex: 1; /* Menyusun container agar mengambil ruang yang tersisa */
 }
 
+
+h1 {
+            margin: 20px auto;
+            padding-bottom: 8px;
+            width: 90%;
+            text-align: left;
+            font-size: 28px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            border-bottom: 2px solid 	#000000;
+        }
+
+        /* Wrapper utama agar footer tetap di bawah */
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Bagian utama agar konten fleksibel */
+.content-main {
+  flex-grow: 1;
+}
+
+/* Pagination tetap di atas footer */
+.pagination-container {
+  display: flex;
+  justify-content: right;
+  margin-top: 250px;
+  margin-bottom: 30px;
+  padding-right: 40px;
+}
+
   </style>
 </head>
 <body>
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg" style="background-color: #343a40;">
 <div class="container-fluid">
-  <img src="img/LogoLemonChip.png" alt="" width="65">
+<a href="index.php">
+    <img src="img/LogoLemonChip.png" alt="Logo LemonChip" width="65">
+</a>
   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -57,7 +95,7 @@ if (isset($_GET['logout'])) {
         <a class="nav-link active" aria-current="page" href="index.php" style="color: #f8f9fa;">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#" style="color: #f8f9fa;">Blog</a>
+        <a class="nav-link" href="blog.php" style="color: #f8f9fa;">Blog</a>
       </li>
       <li class="nav-item">
           <a class="nav-link" href="about.php" style="color: #f8f9fa;">About</a>

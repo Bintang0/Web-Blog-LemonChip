@@ -1,22 +1,22 @@
 <?php require ('functions.php');?>
 <?php 
-$all = query('SELECT * FROM artikel ORDER BY tanggal DESC') ?>
+$all = query('SELECT * FROM artikel ORDER BY tanggal DESC LIMIT 2') ?>
 
 <?php require('views/partials/header.php') ?>
 
 
 
     <!-- CAROUSEL -->
-<div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel" style="width: 90%; margin: auto; padding-top: 5px;">
+    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel" style="width: 100vw; margin: auto; ">
   <div class="carousel-inner">
     <div class="carousel-item active" data-bs-interval="5000">
-      <img src="img/1.jpg" class="d-block w-100" alt="...">
+      <img src="img/1.jpg" class="d-block w-100" alt="Slide 1">
     </div>
     <div class="carousel-item" data-bs-interval="3000">
-      <img src="img/2.jpg" class="d-block w-100" alt="...">
+      <img src="img/2.jpg" class="d-block w-100" alt="Slide 2">
     </div>
     <div class="carousel-item">
-      <img src="img/3.jpg" class="d-block w-100" alt="...">
+      <img src="img/3.jpg" class="d-block w-100" alt="Slide 3">
     </div>
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
@@ -31,7 +31,7 @@ $all = query('SELECT * FROM artikel ORDER BY tanggal DESC') ?>
 
 
 <!-- ARTIKEL -->
-<h1 style="margin-top: 10px; margin-bottom: 10px; border-bottom: black 1px solid; width: 90%; margin: auto;">Artikel Terbaru</h1>
+<h1>New Articles</h1>
 <div class="bungkus-artikel" style="display: flex; justify-content: center; align-items: flex-start; margin-bottom: 20px;">
     <!-- Card pertama -->
     <div style="display: flex; flex-direction: column; width: 40%; margin-top: 10px; margin-bottom: 10px;">
