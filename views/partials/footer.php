@@ -1,5 +1,5 @@
 <!-- FOOTER -->
-<div class="bungkus-footer" style="background-color: #343a40; padding: 20px; color: white; text-align: center; margin-top: 50px;">
+<div class="bungkus-footer" style="background-color: #343a40; padding: 20px; color: white; text-align: center; margin-top: auto; width: 100%;">
     <footer>
         <div>
             <p>&copy; 2025 LemonChip</p>
