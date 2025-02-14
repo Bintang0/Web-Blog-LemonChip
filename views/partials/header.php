@@ -1,5 +1,3 @@
-<?php session_start() ?>
-
 <?php 
 // Fungsi logout
 if (isset($_GET['logout'])) {
@@ -10,7 +8,7 @@ if (isset($_GET['logout'])) {
   session_destroy();
   
   // Redirect ke halaman login atau halaman utama
-  header("Location: index.php"); // Atau bisa ganti dengan halaman yang kamu inginkan
+  header("Location: index.php");
   exit();
 } ?>
 
@@ -24,7 +22,7 @@ if (isset($_GET['logout'])) {
   <style>
       body {
           font-family: 'Roboto', sans-serif;
-          min-height: 100vh; /* Pastikan body memiliki tinggi minimal 100% viewport height */
+          min-height: 100vh; 
     display: flex;
     flex-direction: column;
       }
@@ -49,7 +47,6 @@ if (isset($_GET['logout'])) {
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg" style="background-color: #343a40;">
 <div class="container-fluid">
-  <!-- <a class= "navbar-brand" href="" style="color: #ffffff;"></a> -->
   <img src="img/LogoLemonChip.png" alt="" width="65">
   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>

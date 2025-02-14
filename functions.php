@@ -1,5 +1,5 @@
 <?php
-
+session_start();
   //koneksi ke DB
   $conn = mysqli_connect('localhost', 'root', '', 'kpl');
 
@@ -15,7 +15,6 @@
 }
 
   //register
-
 function registrasi($data) {
     global $conn;
     $nama = strtolower(stripslashes($data["nama"]));

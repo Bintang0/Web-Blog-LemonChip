@@ -1,5 +1,7 @@
 <?php
-// Connect to the database
+session_start();
+
+// konek database
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -7,18 +9,33 @@ $dbname = "kpl";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
+// Cek koneksi
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get the comment data from the form
+// data komentar dari form
 $artikel_id = isset($_POST['artikel_id']) ? (int)$_POST['artikel_id'] : 0;
 $comment = isset($_POST['comment']) ? $conn->real_escape_string($_POST['comment']) : '';
-$nama = "Anonymous"; // For simplicity, we use "Anonymous" as the commenter name. You can implement user authentication to get the actual user name.
 
-// Insert the comment into the database
-$sql = "INSERT INTO comments (artikel_id, isi, nama, tanggal) VALUES ('$artikel_id', '$comment', '$nama', NOW())";
+// Cek apakah UserId ada di session
+$UserId = NULL; // Defaultkan ke NULL jika pengguna tidak login
+if (isset($_SESSION['UserId'])) {
+    $UserId = $_SESSION['UserId']; // Ambil UserId dari session
+
+    // Ambil nama pengguna berdasarkan UserId
+    $sql_nama = "SELECT nama FROM user WHERE UserId = $UserId";
+    $result = $conn->query($sql_nama);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $nama = $row['nama']; // Ambil nama pengguna
+    } else {
+        echo "User not found!";
+    }
+} 
+
+$sql = "INSERT INTO comments (artikel_id, isi, nama, tanggal, UserId) 
+        VALUES ('$artikel_id', '$comment', '$nama', NOW(), " . ($UserId ? $UserId : "NULL") . ")";
 
 if ($conn->query($sql) === TRUE) {
     echo "New comment created successfully";
@@ -28,7 +45,6 @@ if ($conn->query($sql) === TRUE) {
 
 $conn->close();
 
-// Redirect back to the artikel detail page
 header("Location: detail.php?id=$artikel_id");
 exit;
 ?>
