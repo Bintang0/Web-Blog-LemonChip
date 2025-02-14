@@ -1,14 +1,14 @@
 <?php require('functions.php') ?>
 
 <?php
-// Get the ID from the URL
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($id === 0) {
     echo "Artikel tidak ditemukan.";
     exit;
 }
 
-// Fetch the data from the database based on the ID
+$disabled = !isset($_SESSION['login']) || !$_SESSION['login'] ? 'disabled' : ''; // Disable jika belum login
+
 $sql = "SELECT artikel.id, artikel.judul, artikel.tanggal, artikel.isi, artikel.gambar, user.nama 
         FROM artikel 
         JOIN user ON artikel.UserId = user.UserId 
@@ -45,29 +45,32 @@ $conn->close();
                 <input type="hidden" name="artikel_id" value="<?php echo $row['id']; ?>">
                 <div class="form-group">
                     <label for="comment">Your Comment:</label>
-                    <textarea name="comment" id="comment" rows="4" class="form-control" required></textarea>
+                    <textarea name="comment" id="comment" rows="4" class="form-control" required <?php echo $disabled; ?>></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary" <?php echo $disabled; ?>>Submit</button>
             </form>
             <!-- Display comments -->
             <?php
-            // Connect to the database again to fetch comments
             $conn = new mysqli('localhost', 'root', '', 'kpl');
-            $sql = "SELECT * FROM comments WHERE artikel_id = $id ORDER BY tanggal DESC";
-            $result = $conn->query($sql);
+            $sql = "SELECT comments.*, user.nama FROM comments 
+                    JOIN user ON comments.UserId = user.UserId 
+                    WHERE artikel_id = $id 
+                    ORDER BY comments.tanggal DESC";
 
-            if ($result->num_rows > 0) {
-                while ($comment = $result->fetch_assoc()) {
-                    echo "<div class='comment mt-4'>";
-                    echo "<p><strong>" . htmlspecialchars($comment['nama']) . "</strong> <small>" . htmlspecialchars($comment['tanggal']) . "</small></p>";
-                    echo "<p>" . nl2br(htmlspecialchars($comment['isi'])) . "</p>";
-                    echo "</div>";
-                }
-            } else {
-                echo "<p>No comments yet. Be the first to comment!</p>";
-            }
+                    $result = $conn->query($sql);
 
-            $conn->close();
+if ($result->num_rows > 0) {
+    while ($comment = $result->fetch_assoc()) {
+        echo "<div class='comment mt-4'>";
+        echo "<p><strong>" . htmlspecialchars($comment['nama']) . "</strong> <small>" . htmlspecialchars($comment['tanggal']) . "</small></p>";
+        echo "<p>" . nl2br(htmlspecialchars($comment['isi'])) . "</p>";
+        echo "</div>";
+    }
+} else {
+    echo "<p>Belum ada komentar, jadilah yang pertama!</p>";
+}
+
+$conn->close();
             ?>
         </div>
     </div>

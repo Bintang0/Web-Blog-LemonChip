@@ -33,12 +33,11 @@ $all = query('SELECT * FROM artikel ORDER BY tanggal DESC') ?>
 <!-- ARTIKEL -->
 <h1 style="margin-top: 10px; margin-bottom: 10px; border-bottom: black 1px solid; width: 90%; margin: auto;">Artikel Terbaru</h1>
 <div class="bungkus-artikel" style="display: flex; justify-content: center; align-items: flex-start; margin-bottom: 20px;">
-    <!-- Card pertama (diatur vertikal) -->
+    <!-- Card pertama -->
     <div style="display: flex; flex-direction: column; width: 40%; margin-top: 10px; margin-bottom: 10px;">
         <?php foreach($all as $alls) { ?>
         <div class="card" style="width: 100%; margin-top: 10px; margin-bottom: 10px;">
             <div class="card-body">
-              <!-- Menambahkan style object-fit untuk gambar -->
               <img src="img/<?= $alls["gambar"] ;?>" class="d-block w-100" alt="" style="object-fit: cover; width: 500px; height: 200px;">
                 <h5 class="card-title"><?= $alls["judul"] ;?></h5>
                 <h6 class="card-subtitle mb-2 text-body-secondary"><?= $alls["tanggal"] ;?></h6>
@@ -49,7 +48,7 @@ $all = query('SELECT * FROM artikel ORDER BY tanggal DESC') ?>
         <?php } ?>
     </div>
 
-    <!-- List group satu (di sebelah kanan card) -->
+    <!-- List group satu -->
     <div class="list-group" style="width: 18rem; margin-left: 20px; margin-top: 10px; margin-bottom: 10px;">
         <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
             Category
