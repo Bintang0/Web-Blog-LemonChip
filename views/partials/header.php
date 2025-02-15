@@ -52,6 +52,7 @@ if (isset($_GET['logout'])) {
         /* Menyusun container agar mengambil ruang yang tersisa */
     }
 
+    
 
     h1 .judul-utama {
         margin: 20px auto;
@@ -129,12 +130,88 @@ if (isset($_GET['logout'])) {
         color: white;
         border-radius: 15px;
     }
+
+    /* bagian footer */
+@font-face {
+            font-family: 'JamGrotesque';
+            src: url('fonts/JamGrotesque-Regular.woff2') format('woff2'),
+                 url('fonts/JamGrotesque-Regular.woff') format('woff'),
+                 url('fonts/JamGrotesque-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .bungkus-footer {
+            background-color: #f8f9fa;
+            padding: 40px 20px;
+            color: black;
+            font-family: 'JamGrotesque', sans-serif;
+        }
+
+        .footer-title {
+            font-weight: bold;
+            color: black;
+            margin-bottom: 10px;
+        }
+
+        .footer-menu a {
+            text-decoration: none;
+            color: black;
+            display: block;
+            margin: 5px 0;
+        }
+
+        .footer-menu a:hover {
+            color: blue;
+        }
+
+        .newsletter input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .newsletter button {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .newsletter button:hover {
+            background-color: black;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid #ddd;
+            font-size: 14px;
+            color: #555;
+            background-color: #f8f9fa;
+        }
+
+        .footer-bottom a {
+            text-decoration: none;
+            color: #555;
+            margin: 0 10px;
+        }
+
+        .footer-bottom a:hover {
+            color: blue;
+        }
+        /* bagian footer end */
+
     </style>
 </head>
 
 <body>
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg" style="background-color: #343a40;">
+    <nav class="navbar navbar-expand-lg" style="background-color: #ffffff;">
         <div class="container-fluid">
             <a href="index.php">
                 <img src="img/LogoLemonChip.png" alt="Logo LemonChip" width="65">
@@ -147,13 +224,13 @@ if (isset($_GET['logout'])) {
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="index.php" style="color: #f8f9fa;">Home</a>
+                        <a class="nav-link active" aria-current="page" href="index.php" style="color: #000000;">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="blog.php" style="color: #f8f9fa;">Blog</a>
+                        <a class="nav-link" href="blog.php" style="color: #000000;">Blog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about.php" style="color: #f8f9fa;">About</a>
+                        <a class="nav-link" href="about.php" style="color: #000000;">About</a>
                     </li>
                 </ul>
                 <!-- Tombol Pencarian -->
@@ -170,7 +247,7 @@ if (isset($_GET['logout'])) {
                         data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
                         style="border: none; background: transparent;">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
-                            style="width: 24px; height: 24px; fill: #ffffff;">
+                            style="width: 24px; height: 24px; fill: #000000;">
                             <path
                                 d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464l349.5 0c-8.9-63.3-63.3-112-129-112l-91.4 0c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3z" />
                         </svg>
@@ -183,7 +260,7 @@ if (isset($_GET['logout'])) {
                     <!-- Link login jika belum login -->
                     <a href="login.php" class="btn btn-outline-primary" style="border: none; background: transparent;">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
-                            style="width: 24px; height: 24px; fill: #ffffff;">
+                            style="width: 24px; height: 24px; fill: #000000;">
                             <path
                                 d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464l349.5 0c-8.9-63.3-63.3-112-129-112l-91.4 0c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3z" />
                         </svg>

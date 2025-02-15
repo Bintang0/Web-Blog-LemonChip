@@ -1,12 +1,49 @@
 <!-- FOOTER -->
-<div class="bungkus-footer" style="background-color: #343a40; padding: 20px; color: white; text-align: center; margin-top: auto; width: 100%;">
-    <footer>
-        <div>
+<div class="bungkus-footer">
+    <footer class="container">
+        <div class="row">
+            <!-- About -->
+            <div class="col-md-4">
+                <p class="footer-title">ABOUT</p>
+                <p>
+                    Kami menyediakan sumber daya yang berguna melalui artikel dan tutorial, mendorong pembaca untuk berinovasi, 
+                    menghadirkan konten terupdate dan relevan, serta menciptakan platform digital yang aktif untuk berbagi pengetahuan dan pengalaman.
+                </p>
+                <p>
+                    Visi kami adalah menyajikan konten berkualitas yang mudah dipahami, memberdayakan pembaca dengan informasi praktis 
+                    yang dapat langsung diterapkan, serta membangun komunitas yang saling mendukung dalam dunia digital.
+                </p>
+            </div>
+
+            <!-- Footer Menu -->
+            <div class="col-md-4">
+                <p class="footer-title">FOOTER MENU</p>
+                <div class="footer-menu">
+                    <a href="#">About</a>
+                    <a href="#">Blog</a>
+                </div>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="col-md-4">
+                <p class="footer-title">NEWSLETTER</p>
+                <p>Berikan Saran Dan Kritik tentang website Blog Kami Disini!</p>
+                <form class="newsletter">
+                    <input type="email" placeholder="Your email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<!-- Copyright & Social Media -->
+<div class="footer-bottom">
             <p>&copy; 2025 LemonChip</p>
             <p>Follow us on:
-                <a href="#" style="text-decoration: none; color: #f8f9fa; margin: 0 10px;">Facebook</a>|
-                <a href="#" style="text-decoration: none; color: #f8f9fa; margin: 0 10px;">Twitter</a>|
-                <a href="#" style="text-decoration: none; color: #f8f9fa; margin: 0 10px;">Instagram</a>
+                <a href="#">Facebook</a> |
+                <a href="#">Twitter</a> |
+                <a href="#">Instagram</a>
             </p>
         </div>
     </footer>
