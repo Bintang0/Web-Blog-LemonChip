@@ -84,12 +84,12 @@ $result = $conn->query($sql);
                             <p class="card-text text-center"><?php echo htmlspecialchars($row['isi']); ?></p>
                             <p class="text-center"><small class="text-muted"><?php echo $row['tanggal']; ?></small></p>
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="#" class="btn btn-primary">Read More</a>
+                            <a href="detail.php?id=<?= $row['id']; ?>" class="btn btn-primary" role="button" aria-disabled="true">Read More</a>
                                 <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editArtikel<?php echo $row['id']; ?>">
                                     Edit
                                 </button>
                                 
-                                <!-- Modal Edit Artikel -->
+                               <!-- Modal Edit Artikel -->
                                 <div class="modal fade" id="editArtikel<?php echo $row['id']; ?>" tabindex="-1">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -98,22 +98,34 @@ $result = $conn->query($sql);
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form action="UpdateArtikel.php" method="POST">
+                                                <form id="editForm<?php echo $row['id']; ?>" method="POST">
                                                     <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                                    
+                                                    <!-- Judul -->
                                                     <div class="mb-3">
                                                         <label class="form-label">Judul:</label>
                                                         <input type="text" class="form-control" name="judul" value="<?php echo htmlspecialchars($row['judul']); ?>" required>
                                                     </div>
+
+                                                    <!-- Isi -->
                                                     <div class="mb-3">
                                                         <label class="form-label">Isi:</label>
                                                         <textarea class="form-control" name="isi" rows="3" required><?php echo htmlspecialchars($row['isi']); ?></textarea>
                                                     </div>
+
+                                                    <!-- Tanggal Terakhir Diperbarui -->
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Terakhir Diperbarui:</label>
+                                                        <input type="text" class="form-control" id="edit-tanggal-<?php echo $row['id']; ?>" value="<?php echo date("d M Y H:i:s", strtotime($row['UpdateArtikel.php'])); ?>" readonly>
+                                                    </div>
+
                                                     <button type="submit" class="btn btn-primary">Simpan</button>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 
                                 <!-- Tombol Delete dengan Konfirmasi Modal -->
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal<?php echo $row['id']; ?>">
@@ -153,6 +165,38 @@ $result = $conn->query($sql);
 </div>
 <!-- js untuk input data di tambah artikel  -->
 <script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("[id^='editForm']").forEach(form => {
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            
+            let formData = new FormData(this);
+            let artikelId = this.querySelector("input[name='id']").value;
+            let updatedTimeInput = document.getElementById("edit-tanggal-" + artikelId);
+
+            fetch("UpdateArtikel.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Artikel berhasil diperbarui!");
+                    updatedTimeInput.value = new Date().toLocaleString("id-ID", {
+                        year: "numeric", month: "long", day: "numeric", 
+                        hour: "2-digit", minute: "2-digit", second: "2-digit"
+                    });
+                } else {
+                    alert("Gagal memperbarui: " + data.error);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    });
+});
+</script>
+
+<script>
   // Set waktu otomatis saat modal dibuka
  document.addEventListener("DOMContentLoaded", function () {
     function updateTime() {
@@ -178,6 +222,5 @@ $result = $conn->query($sql);
         modal.addEventListener("show.bs.modal", updateTime);
     });
 });
-
 </script>
 <?php require("views/partials/footer.php") ?>
