@@ -1,6 +1,6 @@
-
+<?php require 'functions.php';?>
 <?php
-session_start(); 
+
 
 // Cek apakah user sudah login
 if (!isset($_SESSION['UserId'])) {
@@ -9,34 +9,26 @@ if (!isset($_SESSION['UserId'])) {
 }
 
 $userid = $_SESSION['UserId']; 
-// Konfigurasi database
-$host = "localhost";
-$user = "root";
-$password = "";
-$database = "kpl";
-
-<?php require 'functions.php' ?>
 
 
 
-<?php if (!isset($_SESSION['login'])) {
+
+
+// Cek apakah sesi login ada
+if (!isset($_SESSION['login'])) {
     header("Location: login.php");
     exit();
 }
 
 
-$sql = "SELECT * FROM artikel WHERE UserID = '$userid'"; 
-$result = $conn->query($sql);
-
-$user_id = $_SESSION['UserId'];
-
 $sql = "SELECT * FROM artikel WHERE UserId = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id); 
+$stmt->bind_param("i", $userid); 
 $stmt->execute();
 $result = $stmt->get_result();
 
 ?>
+
 
 <?php require("views/partials/header.php") ?>
 
