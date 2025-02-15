@@ -27,7 +27,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $judul = $_POST['judul'];
     $isi = $_POST['isi'];
     $tanggal = date("Y-m-d H:i:s");
-
+    $status = "Dipublish"; // Status yang ingin di-set
+    
+    // Pastikan status benar
+    var_dump($status); // Debugging status, pastikan bernilai 'Dipublish'
+    
     // Upload Gambar
     $gambar = $_FILES['gambar']['name'];
     $target_dir = "img/";
@@ -35,10 +39,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if (move_uploaded_file($_FILES["gambar"]["tmp_name"], $target_file)) {
         // Simpan ke database menggunakan prepared statement
-        $sql = "INSERT INTO artikel (judul, isi, tanggal, gambar, UserId) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO artikel (judul, isi, tanggal, gambar, UserId, status) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssi", $judul, $isi, $tanggal, $gambar, $UserId);
-
+        
+        // Bind parameter yang benar sesuai dengan tipe data
+        // "sssssi" artinya:
+        // s = string, i = integer
+        $stmt->bind_param("ssssss", $judul, $isi, $tanggal, $gambar, $UserId, $status); // Cek parameter
+        
         if ($stmt->execute()) {
             echo "<script>alert('Artikel berhasil ditambahkan!'); window.location.href='ArtikelSaya.php';</script>";
         } else {

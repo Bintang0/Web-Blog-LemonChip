@@ -24,9 +24,10 @@ if (isset($_GET['logout'])) {
       body {
           font-family: 'Roboto', sans-serif;
           min-height: 100vh; 
-    display: flex;
-    flex-direction: column;
+          display: flex;
+          flex-direction: column;
       }
+      
       .carousel-item img {
           width: 1000px;
           height: 500px;
@@ -34,16 +35,21 @@ if (isset($_GET['logout'])) {
           object-fit: cover;
       }
 
+      .carousel {
+        max-width: 100%;
+        overflow: hidden;
+      }
+
       .navbar {
           background-color: #343a40;
       }
 
       .container {
-    flex: 1; /* Menyusun container agar mengambil ruang yang tersisa */
-}
+          flex: 1; /* Menyusun container agar mengambil ruang yang tersisa */
+      }
 
 
-h1 {
+h1 .judul-utama{
             margin: 20px auto;
             padding-bottom: 8px;
             width: 90%;
