@@ -7,12 +7,12 @@ if ($id === 0) {
     exit;
 }
 
-$disabled = !isset($_SESSION['login']) || !$_SESSION['login'] ? 'disabled' : ''; // Disable jika belum login
-
 $sql = "SELECT artikel.id, artikel.judul, artikel.tanggal, artikel.isi, artikel.gambar, user.nama 
         FROM artikel 
         JOIN user ON artikel.UserId = user.UserId 
         WHERE artikel.id = $id";
+
+$nama = 'Anonymous';
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -45,9 +45,9 @@ $conn->close();
                 <input type="hidden" name="artikel_id" value="<?php echo $row['id']; ?>">
                 <div class="form-group">
                     <label for="comment">Your Comment:</label>
-                    <textarea name="comment" id="comment" rows="4" class="form-control" required <?php echo $disabled; ?>></textarea>
+                    <textarea name="comment" id="comment" rows="4" class="form-control" required></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary" <?php echo $disabled; ?>>Submit</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </form>
             <!-- Display comments -->
             <?php

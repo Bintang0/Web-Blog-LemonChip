@@ -38,6 +38,7 @@ $result = $stmt->get_result();
     <!-- Tombol Tambah Artikel -->
         <div class="text-center mb-3">
             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" >Tambahkan Artikel</button>
+            <a class="btn btn-primary" href="history.php" role="button">Riwayat Penerbitan</a>
         </div>
 
         <!-- Modal Tambah Artikel -->
@@ -46,6 +47,7 @@ $result = $stmt->get_result();
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Artikel</h1>
+                
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

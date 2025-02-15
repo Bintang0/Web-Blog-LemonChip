@@ -1,6 +1,6 @@
 <?php require ('functions.php');?>
 <?php 
-$all = query('SELECT * FROM artikel ORDER BY tanggal DESC LIMIT 2') ?>
+$all = query('SELECT * FROM artikel WHERE status="Dipublish" ORDER BY tanggal DESC LIMIT 2') ?>
 
 <?php require('views/partials/header.php') ?>
 
@@ -31,7 +31,16 @@ $all = query('SELECT * FROM artikel ORDER BY tanggal DESC LIMIT 2') ?>
 
 
 <!-- ARTIKEL -->
-<h1>New Articles</h1>
+<h1 class="judul-utama" style="margin: 20px auto;
+            padding-bottom: 8px;
+            width: 90%;
+            text-align: left;
+            font-size: 28px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            border-bottom: 2px solid 	#000000;">New Articles</h1>
+            
 <div class="bungkus-artikel" style="display: flex; justify-content: center; align-items: flex-start; margin-bottom: 20px;">
     <!-- Card pertama -->
     <div style="display: flex; flex-direction: column; width: 40%; margin-top: 10px; margin-bottom: 10px;">
