@@ -1,5 +1,7 @@
 <?php
-date_default_timezone_set("Asia/Jakarta"); 
+session_start();
+date_default_timezone_set("Asia/Jakarta");
+
 // Koneksi ke database
 $host = "localhost";
 $user = "root";
@@ -11,6 +13,14 @@ $conn = new mysqli($host, $user, $password, $database);
 if ($conn->connect_error) {
     die("Koneksi gagal: " . $conn->connect_error);
 }
+
+// Cek apakah pengguna sudah login
+if (!isset($_SESSION['UserId'])) {
+    echo "<script>alert('Anda harus login terlebih dahulu!'); window.location.href='login.php';</script>";
+    exit();
+}
+
+$UserId = intval($_SESSION['UserId']); // Pastikan UserId adalah integer
 
 // Periksa apakah form dikirimkan
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -24,14 +34,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $target_file = $target_dir . basename($gambar);
     
     if (move_uploaded_file($_FILES["gambar"]["tmp_name"], $target_file)) {
-        // Simpan ke database
-        $sql = "INSERT INTO artikel (judul, isi, tanggal, gambar) VALUES ('$judul', '$isi', '$tanggal', '$gambar')";
-        
-        if ($conn->query($sql) === TRUE) {
+        // Simpan ke database menggunakan prepared statement
+        $sql = "INSERT INTO artikel (judul, isi, tanggal, gambar, UserId) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssssi", $judul, $isi, $tanggal, $gambar, $UserId);
+
+        if ($stmt->execute()) {
             echo "<script>alert('Artikel berhasil ditambahkan!'); window.location.href='ArtikelSaya.php';</script>";
         } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+            echo "Error: " . $stmt->error;
         }
+        $stmt->close();
     } else {
         echo "Gagal mengunggah gambar.";
     }

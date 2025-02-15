@@ -123,7 +123,7 @@ h1 {
 </svg>
 </button>
 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-<li><a class="dropdown-item" href="#">Artikel Saya</a></li>
+<li><a class="dropdown-item" href="ArtikelSaya.php">Artikel Saya</a></li>
 <li><a class="dropdown-item" href="logout.php?logout=true">Logout</a></li>
 </ul>
 <?php else: ?>

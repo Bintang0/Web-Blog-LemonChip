@@ -28,7 +28,7 @@ if (isset($_POST['register'])) {
 <body class="h-full">
     <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-            <img class="mx-auto h-30 w-auto" src="https://i.postimg.cc/X7qVsP68/Lemon.png" alt="Your Company">
+            <img class="mx-auto h-30 w-auto" src="img/LogoLemonChip.png" alt="Your Company">
             <h2 class="mt-0 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Daftar ke Lemon Chip</h2>
         </div>
 

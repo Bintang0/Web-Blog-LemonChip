@@ -15,13 +15,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id = $_POST['id'];
     $judul = $conn->real_escape_string($_POST['judul']);
     $isi = $conn->real_escape_string($_POST['isi']);
-    
-    $sql = "UPDATE artikel SET judul='$judul', isi='$isi' WHERE id=$id";
-    
+
+    // Update artikel & perbarui tanggal otomatis
+    $sql = "UPDATE artikel SET judul='$judul', isi='$isi', updated_at=NOW() WHERE id=$id";
+
     if ($conn->query($sql) === TRUE) {
-        echo "<script>alert('Artikel berhasil diperbarui!'); window.location.href='ArtikelSaya.php';</script>";
+        echo json_encode(["success" => true, "updated_at" => date("Y-m-d H:i:s")]);
     } else {
-        echo "<script>alert('Terjadi kesalahan: " . $conn->error . "'); window.history.back();</script>";
+        echo json_encode(["success" => false, "error" => $conn->error]);
     }
 }
 
