@@ -20,9 +20,9 @@ if (!isset($_SESSION['UserId'])) {
     exit();
 }
 
-$UserId = intval($_SESSION['UserId']); // Pastikan UserId adalah integer
+$UserId = intval($_SESSION['UserId']);
 
-// Periksa apakah form dikirimkan
+// Periksa form yang dikirimkan
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $judul = $_POST['judul'];
     $isi = $_POST['isi'];
@@ -40,6 +40,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (move_uploaded_file($_FILES["gambar"]["tmp_name"], $target_file)) {
         // Simpan ke database menggunakan prepared statement
         $sql = "INSERT INTO artikel (judul, isi, tanggal, gambar, UserId, status) VALUES (?, ?, ?, ?, ?, ?)";
+        // Simpan data ke database 
+        $sql = "INSERT INTO artikel (judul, isi, tanggal, gambar, UserId) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         
         // Bind parameter yang benar sesuai dengan tipe data

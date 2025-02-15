@@ -1,5 +1,4 @@
 <?php
-// Konfigurasi database
 $host = "localhost";
 $user = "root";
 $password = "";
@@ -12,17 +11,19 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id = $_POST['id'];
-    $judul = $conn->real_escape_string($_POST['judul']);
-    $isi = $conn->real_escape_string($_POST['isi']);
+    $id = $_POST["id"];
+    $judul = $conn->real_escape_string($_POST["judul"]);
+    $isi = $conn->real_escape_string($_POST["isi"]);
 
-    // Update artikel & perbarui tanggal otomatis
-    $sql = "UPDATE artikel SET judul='$judul', isi='$isi', updated_at=NOW() WHERE id=$id";
+    $sql = "UPDATE artikel SET judul='$judul', isi='$isi', tanggal=CURRENT_TIMESTAMP() WHERE id=$id";
 
     if ($conn->query($sql) === TRUE) {
-        echo json_encode(["success" => true, "updated_at" => date("Y-m-d H:i:s")]);
+        echo "<script>
+                alert('Artikel berhasil diperbarui!');
+                window.location.href = 'ArtikelSaya.php';
+              </script>";
     } else {
-        echo json_encode(["success" => false, "error" => $conn->error]);
+        echo "Error: " . $conn->error;
     }
 }
 
