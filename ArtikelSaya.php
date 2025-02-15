@@ -1,18 +1,18 @@
-<?php
-// Konfigurasi database
-$host = "localhost";
-$user = "root";
-$password = "";
-$database = "kpl";
+<?php require 'functions.php' ?>
 
-$conn = new mysqli($host, $user, $password, $database);
 
-if ($conn->connect_error) {
-    die("Koneksi gagal: " . $conn->connect_error);
+<?php if (!isset($_SESSION['login'])) {
+    header("Location: login.php");
+    exit();
 }
 
-$sql = "SELECT * FROM artikel";
-$result = $conn->query($sql);
+$user_id = $_SESSION['UserId'];
+
+$sql = "SELECT * FROM artikel WHERE UserId = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id); 
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <?php require("views/partials/header.php") ?>
