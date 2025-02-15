@@ -11,9 +11,6 @@ if (!isset($_SESSION['UserId'])) {
 $userid = $_SESSION['UserId']; 
 
 
-
-
-
 // Cek apakah sesi login ada
 if (!isset($_SESSION['login'])) {
     header("Location: login.php");
@@ -21,152 +18,348 @@ if (!isset($_SESSION['login'])) {
 }
 
 
-$sql = "SELECT * FROM artikel WHERE UserId = ?";
+// $sql = "SELECT * FROM artikel WHERE UserId = ?";
+// $stmt = $conn->prepare($sql);
+// $stmt->bind_param("i", $userid); 
+// $stmt->execute();
+// $result = $stmt->get_result();
+
+
+// Query untuk mengambil artikel dengan kategorinya dan keywords
+$sql = "SELECT artikel.*, categories.name as category_name 
+        FROM artikel 
+        LEFT JOIN categories ON artikel.category_id = categories.id 
+        WHERE artikel.UserId = ?
+        ORDER BY artikel.tanggal DESC";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $userid); 
+$stmt->bind_param("i", $userid);
 $stmt->execute();
 $result = $stmt->get_result();
 
+// Get categories for dropdown
+$categories = query("SELECT * FROM categories ORDER BY name ASC");
 ?>
 
 
 <?php require("views/partials/header.php") ?>
 
 <div class="container mt-4">
-    <h2 class="text-center">Manajemen Artikel</h2>
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="text-center">Manajemen Artikel</h2>
+        </div>
+    </div>
 
     <!-- Tombol Tambah Artikel -->
-        <div class="text-center mb-3">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" >Tambahkan Artikel</button>
-            <a class="btn btn-primary" href="history.php" role="button">Riwayat Penerbitan</a>
-        </div>
+    <div class="text-center mb-4">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addArticleModal">
+            <i class="bi bi-plus-circle"></i> Tambah Artikel Baru
+        </button>
+        <a class="btn btn-primary" href="history.php">
+            <i class="bi bi-clock-history"></i> Riwayat Penerbitan
+        </a>
+    </div>
 
-        <!-- Modal Tambah Artikel -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Artikel</h1>
-                
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="tambahArtikel.php" method="POST" enctype="multipart/form-data">
-                    <!-- Nama Artikel -->
-                    <div class="mb-3">
-                        <label for="article-name" class="col-form-label">Nama Artikel:</label>
-                        <input type="text" class="form-control" name="judul" id="article-name" required>
-                    </div>
-                    <!-- Isi Artikel Singkat -->
-                    <div class="mb-3">
-                        <label for="article-description" class="col-form-label">Isi Artikel:</label>
-                        <textarea class="form-control" name="isi" id="article-description" rows="3" required></textarea>
-                    </div>
+    <!-- Modal Tambah Artikel -->
+    <div class="modal fade" id="addArticleModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Artikel Baru</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="tambahArtikel.php" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="judul" class="form-label">Judul Artikel</label>
+                            <input type="text" class="form-control" id="judul" name="judul" required>
+                        </div>
 
-                    <!-- Upload File Artikel -->
-                    <div class="mb-3">
-                        <label for="article-image" class="col-form-label">Upload Gambar Artikel:</label>
-                        <input type="file" class="form-control" name="gambar" id="article-image" accept=".jpg, .jpeg, .png, .gif" required>
-                    </div>
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Kategori</label>
+                            <select class="form-select" name="category_id" id="category" required>
+                                <option value="">Pilih Kategori</option>
+                                <?php foreach($categories as $category): ?>
+                                <option value="<?= $category['id'] ?>">
+                                    <?= htmlspecialchars($category['name']) ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Kembali</button>
-                        <button type="submit" class="btn btn-success">simpan</button>
-                    </div>
-                </form>
+                        <div class="mb-3">
+                            <label for="keywords" class="form-label">Keywords</label>
+                            <input type="text" class="form-control" id="keywords" name="keywords"
+                                placeholder="Contoh: teknologi, programming, web">
+                            <small class="text-muted">Pisahkan dengan koma (,)</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="isi" class="form-label">Isi Artikel</label>
+                            <textarea class="form-control" id="isi" name="isi" rows="5" required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="gambar" class="form-label">Gambar Artikel</label>
+                            <input type="file" class="form-control" id="gambar" name="gambar"
+                                accept=".jpg,.jpeg,.png,.gif" required>
+                            <div id="gambarPreview" class="mt-2"></div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan Artikel</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-
-    <!-- Menampilkan Artikel -->
+    <!-- Display Articles -->
     <div class="row">
-        <?php
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                ?>
-                <div class="col-md-4">
-                    <div class="card shadow-sm mb-3">
-                        <img src="img/<?php echo htmlspecialchars($row['gambar']); ?>" class="card-img-top" style="width: 100%; height: 150px; object-fit: cover;">
-                        <div class="card-body">
-                            <h5 class="card-title text-center"><?php echo htmlspecialchars($row['judul']); ?></h5>
-                            <p class="card-text text-center"><?php echo htmlspecialchars($row['isi']); ?></p>
-                            <p class="text-center">
-                                <small class="text-muted">Diperbarui: <?php echo date("d M Y, H:i", strtotime($row['tanggal'])); ?></small>
-                            </p>
-                            <div class="d-flex justify-content-center gap-2">
-                            <a href="detail.php?id=<?= $row['id']; ?>" class="btn btn-primary" role="button" aria-disabled="true">Read More</a>
-                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editArtikel<?php echo $row['id']; ?>">
-                                    Edit
-                                </button>
-                                
-                               <!-- Modal Edit Artikel -->
-                                <div class="modal fade" id="editArtikel<?php echo $row['id']; ?>" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Edit Artikel</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="updateArtikel.php" method="POST">
-                                                    <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                                                    
-                                                    <!-- Judul -->
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Judul:</label>
-                                                        <input type="text" class="form-control" name="judul" value="<?php echo htmlspecialchars($row['judul']); ?>" required>
-                                                    </div>
+        <?php if ($result->num_rows > 0): ?>
+        <?php while ($row = $result->fetch_assoc()): ?>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="img/<?= htmlspecialchars($row['gambar']) ?>" class="card-img-top article-image"
+                    alt="<?= htmlspecialchars($row['judul']) ?>" style="height: 200px; object-fit: cover;">
 
-                                                    <!-- Isi -->
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Isi:</label>
-                                                        <textarea class="form-control" name="isi" rows="3" required><?php echo htmlspecialchars($row['isi']); ?></textarea>
-                                                    </div>
+                <div class="card-body">
+                    <h5 class="card-title"><?= htmlspecialchars($row['judul']) ?></h5>
 
-                                                    <button type="submit" class="btn btn-primary">Simpan</button>
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    <p class="card-text text-muted small">
+                        <i class="bi bi-calendar"></i>
+                        <?= date('d M Y H:i', strtotime($row['tanggal'])) ?>
+                    </p>
 
-                                <!-- Tombol Delete dengan Konfirmasi Modal -->
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal<?php echo $row['id']; ?>">
-                                    Hapus
-                                </button>
-                                
-                                <!-- Modal Konfirmasi Delete -->
-                                <div class="modal fade" id="deleteModal<?php echo $row['id']; ?>" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Konfirmasi Hapus</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                Apakah Anda yakin ingin menghapus artikel <strong><?php echo htmlspecialchars($row['judul']); ?></strong>?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                                <a href="deleteArtikel.php?id=<?php echo $row['id']; ?>" class="btn btn-danger">Hapus</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <p class="card-text text-muted small">
+                        <i class="bi bi-tag"></i>
+                        <?= htmlspecialchars($row['category_name'] ?? 'Uncategorized') ?>
+                    </p>
+
+                    <?php if (!empty($row['keywords'])): ?>
+                    <div class="mb-2">
+                        <?php foreach(explode(',', $row['keywords']) as $keyword): ?>
+                        <span class="badge bg-secondary">
+                            <?= htmlspecialchars(trim($keyword)) ?>
+                        </span>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
+
+                    <p class="card-text">
+                        <?= htmlspecialchars(substr($row['isi'], 0, 100)) ?>...
+                    </p>
+
+                    <div class="btn-group w-100">
+                        <a href="detail.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">
+                            <i class="bi bi-eye"></i> Baca
+                        </a>
+                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#editModal<?= $row['id'] ?>">
+                            <i class="bi bi-pencil"></i> Edit
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#deleteModal<?= $row['id'] ?>">
+                            <i class="bi bi-trash"></i> Hapus
+                        </button>
                     </div>
                 </div>
-                <?php
-            }
-        } else {
-            echo "<p class='text-center'>Tidak ada artikel yang tersedia.</p>";
-        }
-        $conn->close();
-        ?>
+            </div>
+        </div>
+
+        <!-- Edit Modal -->
+        <div class="modal fade" id="editModal<?= $row['id'] ?>" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Artikel</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="updateArtikel.php" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="id" value="<?= $row['id'] ?>">
+
+                            <div class="mb-3">
+                                <label class="form-label">Judul</label>
+                                <input type="text" class="form-control" name="judul"
+                                    value="<?= htmlspecialchars($row['judul']) ?>" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Kategori</label>
+                                <select class="form-select" name="category_id" required>
+                                    <option value="">Pilih Kategori</option>
+                                    <?php foreach($categories as $category): ?>
+                                    <option value="<?= $category['id'] ?>"
+                                        <?= ($category['id'] == $row['category_id']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($category['name']) ?>
+                                    </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Keywords</label>
+                                <input type="text" class="form-control" name="keywords"
+                                    value="<?= htmlspecialchars($row['keywords'] ?? '') ?>">
+                                <small class="text-muted">Pisahkan dengan koma (,)</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Isi Artikel</label>
+                                <textarea class="form-control" name="isi" rows="5" required><?= 
+                                            htmlspecialchars($row['isi']) 
+                                        ?></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Gambar Saat Ini</label>
+                                <div class="current-image-container">
+                                    <img src="img/<?= htmlspecialchars($row['gambar']) ?>"
+                                        class="img-thumbnail current-image" alt="Current Image">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Update Gambar (Optional)</label>
+                                <input type="file" class="form-control" name="gambar" accept=".jpg,.jpeg,.png,.gif">
+                                <div class="new-image-preview mt-2"></div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade" id="deleteModal<?= $row['id'] ?>" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Konfirmasi Hapus</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Anda yakin ingin menghapus artikel "<strong><?= htmlspecialchars($row['judul']) ?></strong>"?
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <a href="deleteArtikel.php?id=<?= $row['id'] ?>" class="btn btn-danger">Hapus</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php endwhile; ?>
+        <?php else: ?>
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                Belum ada artikel yang dibuat. Silakan tambah artikel baru.
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 </div>
+
+<?php 
+$stmt->close();
+$conn->close();
+?>
+
 <?php require("views/partials/footer.php") ?>
+
+<style>
+.article-image {
+    transition: transform 0.3s ease;
+}
+
+.article-image:hover {
+    transform: scale(1.05);
+}
+
+.current-image-container {
+    text-align: center;
+    margin: 10px 0;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.current-image {
+    max-height: 200px;
+    width: auto;
+}
+
+.badge {
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.new-image-preview img {
+    max-height: 200px;
+    width: auto;
+    margin-top: 10px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Preview for edit article images
+    document.querySelectorAll('input[type="file"][name="gambar"]').forEach(input => {
+        input.addEventListener('change', function(e) {
+            const preview = this.nextElementSibling;
+            preview.innerHTML = '';
+
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('img-thumbnail');
+                    preview.appendChild(img);
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    });
+
+    // Validate image upload
+    function validateImage(input) {
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+
+            if (file.size > maxSize) {
+                alert('File terlalu besar! Maksimal ukuran file adalah 5MB.');
+                input.value = '';
+                return false;
+            }
+
+            if (!allowedTypes.includes(file.type)) {
+                alert('Format file tidak didukung! Gunakan JPG, JPEG, PNG, atau GIF.');
+                input.value = '';
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    // Add validation to all image inputs
+    document.querySelectorAll('input[type="file"]').forEach(input => {
+        input.addEventListener('change', function() {
+            validateImage(this);
+        });
+    });
+});
+</script>
