@@ -24,12 +24,21 @@ if (isset($_GET['id'])) {
     $stmt->execute();
     $result = $stmt->get_result();
     $data = $result->fetch_assoc();
-
+    
     if ($data) {
-        $gambarPath = "img/" . $data['gambar'];
+        $gambarNama = $data['gambar'];
+        $gambarPath = "img/" . $gambarNama;
 
-        // Hapus file gambar jika ada
-        if (file_exists($gambarPath)) {
+        // Cek apakah gambar ini digunakan oleh artikel lain
+        $cekQuery = "SELECT COUNT(*) as total FROM artikel WHERE gambar = ?";
+        $stmt = $conn->prepare($cekQuery);
+        $stmt->bind_param("s", $gambarNama);
+        $stmt->execute();
+        $cekResult = $stmt->get_result();
+        $cekData = $cekResult->fetch_assoc();
+
+        // hapus gambar dari server
+        if ($cekData['total'] == 1 && file_exists($gambarPath)) {
             unlink($gambarPath);
         }
 
