@@ -1,18 +1,5 @@
+<?php require 'functions.php' ?>
 <?php
-session_start();
-
-// konek database
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "kpl";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Cek koneksi
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
 // data komentar dari form
 $artikel_id = isset($_POST['artikel_id']) ? (int)$_POST['artikel_id'] : 0;

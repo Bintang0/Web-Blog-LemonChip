@@ -1,18 +1,6 @@
+<?php require 'functions.php' ?>
 <?php
-session_start();
 date_default_timezone_set("Asia/Jakarta");
-
-// Koneksi ke database
-$host = "localhost";
-$user = "root";
-$password = "";
-$database = "kpl";
-
-$conn = new mysqli($host, $user, $password, $database);
-
-if ($conn->connect_error) {
-    die("Koneksi gagal: " . $conn->connect_error);
-}
 
 // Cek apakah user sudah login
 if (!isset($_SESSION['UserId'])) {
