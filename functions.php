@@ -14,6 +14,25 @@ session_start();
     return $rows;
 }
 
+// Function to get user info from session
+function getUserInfo() {
+  // Default values
+  $userInfo = [
+      'userId' => null,
+      'nama' => 'Guest',
+      'isLoggedIn' => false
+  ];
+
+  // If user is logged in, update the values
+  if (isset($_SESSION['login']) && isset($_SESSION['UserId'])) {
+      $userInfo['isLoggedIn'] = true;
+      $userInfo['userId'] = $_SESSION['UserId'];
+      $userInfo['nama'] = $_SESSION['nama'] ?? 'Guest';
+  }
+
+  return $userInfo;
+}
+
   //register
 function registrasi($data) {
     global $conn;
