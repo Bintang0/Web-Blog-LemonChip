@@ -157,6 +157,7 @@ $keywords = query("SELECT keyword FROM article_keywords WHERE artikel_id = $id")
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-person"></i></span>
                                 <input type="text" name="guest_name" class="form-control" required>
+                                <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                             </div>
                             <small class="text-muted">Posting as guest</small>
                         </div>

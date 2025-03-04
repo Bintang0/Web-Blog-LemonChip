@@ -1,8 +1,13 @@
 <?php require 'functions.php' ?>
 <?php
 
+// Validasi CSRF Token
+if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
+    die("Invalid CSRF token. Please try again.");
+}
+
 // data komentar dari form
-$artikel_id = isset($_POST['artikel_id']) ? (int)$_POST['artikel_id'] : 0;
+$artikel_id = isset($_POST['artikel_id']) ? (int) $_POST['artikel_id'] : 0;
 $comment = isset($_POST['comment']) ? $conn->real_escape_string($_POST['comment']) : '';
 
 // Cek apakah UserId ada di session
@@ -19,7 +24,7 @@ if (isset($_SESSION['UserId'])) {
     } else {
         echo "User not found!";
     }
-} 
+}
 
 $sql = "INSERT INTO comments (artikel_id, isi, nama, tanggal, UserId) 
         VALUES ('$artikel_id', '$comment', '$nama', NOW(), " . ($UserId ? $UserId : "NULL") . ")";
