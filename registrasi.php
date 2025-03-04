@@ -43,7 +43,9 @@ if (isset($_POST['register'])) {
                 <div>
                     <label for="nama" class="block text-sm/6 font-medium text-gray-900">Nama</label>
                     <div class="mt-2">
-                        <input type="text" name="nama" id="nama" autocomplete="nama" required
+                        <input type="text" name="nama" id="nama" autocomplete="nama" required minlength="3"
+                            maxlength="50" pattern="[a-zA-Z0-9\s]{3,50}"
+                            title="Nama hanya boleh terdiri dari huruf, angka, dan spasi (3-50 karakter)"
                             class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                     </div>
                 </div>
@@ -61,6 +63,7 @@ if (isset($_POST['register'])) {
                     </div>
                     <div class="mt-2">
                         <input type="password" name="password" id="password" autocomplete="current-password" required
+                            minlength="8"
                             class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                     </div>
                 </div>
@@ -70,6 +73,7 @@ if (isset($_POST['register'])) {
                     </div>
                     <div class="mt-2">
                         <input type="password" name="password2" id="password2" autocomplete="current-password" required
+                            minlength="8"
                             class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                     </div>
                 </div>
