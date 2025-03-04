@@ -13,17 +13,22 @@ if (!isset($_SESSION['UserId'])) {
     exit();
 }
 
+// Validasi CSRF Token
+if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
+    die("Invalid CSRF token. Coba Kembali.");
+}
+
 $UserId = intval($_SESSION['UserId']);
 
 // Periksa form yang dikirimkan
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $judul = trim($_POST['judul']);
     $isi = trim($_POST['isi']);
-    $category_id = isset($_POST['category_id']) ? (int)$_POST['category_id'] : null;
+    $category_id = isset($_POST['category_id']) ? (int) $_POST['category_id'] : null;
     $keywords = isset($_POST['keywords']) ? trim($_POST['keywords']) : '';
     $tanggal = date("Y-m-d H:i:s");
     $status = "Dipublish";
-    
+
     // Validasi input
     if (empty($judul) || empty($isi)) {
         echo "<script>
@@ -38,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $allowed = ['jpg', 'jpeg', 'png', 'gif'];
         $filename = $_FILES['gambar']['name'];
         $filetype = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        
+
         // Validasi tipe file
         if (!in_array($filetype, $allowed)) {
             echo "<script>
@@ -61,25 +66,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $gambar = uniqid() . '.' . $filetype;
         $target_dir = "img/";
         $target_file = $target_dir . $gambar;
-        
+
         // Upload file
         if (move_uploaded_file($_FILES["gambar"]["tmp_name"], $target_file)) {
             // Format keywords
             $keywords = implode(', ', array_filter(array_map('trim', explode(',', $keywords))));
-            
+
             // Mulai transaction
             $conn->begin_transaction();
-            
+
             try {
                 // Simpan artikel ke database
                 $sql = "INSERT INTO artikel (judul, isi, tanggal, gambar, UserId, status, category_id, keywords) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("ssssisis", $judul, $isi, $tanggal, $gambar, $UserId, $status, $category_id, $keywords);
-                
+
                 if ($stmt->execute()) {
                     $artikel_id = $conn->insert_id;
-                    
+
                     // Simpan keywords ke table article_keywords jika ada
                     if (!empty($keywords)) {
                         $keywordsArr = array_unique(array_filter(array_map('trim', explode(',', $keywords))));
@@ -90,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $stmt->execute();
                         }
                     }
-                    
+
                     $conn->commit();
                     echo "<script>
                             alert('Artikel berhasil ditambahkan!');

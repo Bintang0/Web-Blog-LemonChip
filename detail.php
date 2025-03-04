@@ -1,11 +1,17 @@
-<?php 
+<?php
 require 'functions.php';
 
 // Get article ID
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 if (!$id) {
     header("Location: blog.php");
     exit;
+}
+
+
+// Validasi parameter GET 'id'
+if (!isset($_GET['id']) || !is_numeric($_GET['id']) || $_GET['id'] <= 0) {
+    die("ID artikel tidak valid.");
 }
 
 // Get user info from session
@@ -42,10 +48,10 @@ $article = $articles[0];
 // Handle comment submission
 if (isset($_POST['submit_comment'])) {
     $comment = trim($_POST['comment']);
-    
+
     if (!empty($comment)) {
         $comment = mysqli_real_escape_string($conn, $comment);
-        
+
         if ($isLoggedIn) {
             $sql = "INSERT INTO comments (artikel_id, isi, nama, UserId) 
                     VALUES ($id, '$comment', '$userLogin', $userId)";
@@ -57,7 +63,7 @@ if (isset($_POST['submit_comment'])) {
                         VALUES ($id, '$comment', '$guestName', '$guestName')";
             }
         }
-        
+
         if (isset($sql)) {
             mysqli_query($conn, $sql);
             header("Location: detail.php?id=$id#comments");
@@ -113,13 +119,13 @@ $keywords = query("SELECT keyword FROM article_keywords WHERE artikel_id = $id")
 
             <!-- Keywords -->
             <?php if (!empty($keywords)): ?>
-            <div class="mb-3">
-                <?php foreach($keywords as $keyword): ?>
-                <span class="badge bg-secondary me-1 rounded-pill">
-                    <i class="bi bi-tag-fill"></i> <?= htmlspecialchars($keyword['keyword']) ?>
-                </span>
-                <?php endforeach; ?>
-            </div>
+                <div class="mb-3">
+                    <?php foreach ($keywords as $keyword): ?>
+                        <span class="badge bg-secondary me-1 rounded-pill">
+                            <i class="bi bi-tag-fill"></i> <?= htmlspecialchars($keyword['keyword']) ?>
+                        </span>
+                    <?php endforeach; ?>
+                </div>
             <?php endif; ?>
 
             <!-- Article Content -->
@@ -146,19 +152,19 @@ $keywords = query("SELECT keyword FROM article_keywords WHERE artikel_id = $id")
             <div class="comment-form mb-4">
                 <form action="" method="POST">
                     <?php if (!$isLoggedIn): ?>
-                    <div class="mb-3">
-                        <label class="form-label">Name *</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-person"></i></span>
-                            <input type="text" name="guest_name" class="form-control" required>
+                        <div class="mb-3">
+                            <label class="form-label">Name *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input type="text" name="guest_name" class="form-control" required>
+                            </div>
+                            <small class="text-muted">Posting as guest</small>
                         </div>
-                        <small class="text-muted">Posting as guest</small>
-                    </div>
                     <?php else: ?>
-                    <div class="alert alert-light">
-                        <i class="bi bi-person-circle"></i>
-                        Commenting as: <strong><?= htmlspecialchars($userLogin) ?></strong>
-                    </div>
+                        <div class="alert alert-light">
+                            <i class="bi bi-person-circle"></i>
+                            Commenting as: <strong><?= htmlspecialchars($userLogin) ?></strong>
+                        </div>
                     <?php endif; ?>
 
                     <div class="mb-3">
@@ -178,42 +184,42 @@ $keywords = query("SELECT keyword FROM article_keywords WHERE artikel_id = $id")
             <!-- Comments List -->
             <div class="comments-list">
                 <?php if (!empty($comments)): ?>
-                <?php foreach ($comments as $comment): ?>
-                <div class="comment-item mb-3">
-                    <div class="card bg-light">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <div class="d-flex align-items-center">
-                                    <?php if ($comment['user_type'] === 'Member'): ?>
-                                    <i class="bi bi-person-circle text-primary fs-4 me-2"></i>
-                                    <?php else: ?>
-                                    <i class="bi bi-person text-secondary fs-4 me-2"></i>
-                                    <?php endif; ?>
-                                    <div>
-                                        <h6 class="mb-0">
-                                            <?= htmlspecialchars($comment['display_name']) ?>
-                                            <span
-                                                class="badge <?= $comment['user_type'] === 'Member' ? 'bg-primary' : 'bg-secondary' ?> ms-2">
-                                                <?= $comment['user_type'] ?>
-                                            </span>
-                                        </h6>
-                                        <small class="text-muted">
-                                            <i class="bi bi-clock"></i>
-                                            <?= date('d M Y H:i', strtotime($comment['tanggal'])) ?>
-                                        </small>
+                    <?php foreach ($comments as $comment): ?>
+                        <div class="comment-item mb-3">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <?php if ($comment['user_type'] === 'Member'): ?>
+                                                <i class="bi bi-person-circle text-primary fs-4 me-2"></i>
+                                            <?php else: ?>
+                                                <i class="bi bi-person text-secondary fs-4 me-2"></i>
+                                            <?php endif; ?>
+                                            <div>
+                                                <h6 class="mb-0">
+                                                    <?= htmlspecialchars($comment['display_name']) ?>
+                                                    <span
+                                                        class="badge <?= $comment['user_type'] === 'Member' ? 'bg-primary' : 'bg-secondary' ?> ms-2">
+                                                        <?= $comment['user_type'] ?>
+                                                    </span>
+                                                </h6>
+                                                <small class="text-muted">
+                                                    <i class="bi bi-clock"></i>
+                                                    <?= date('d M Y H:i', strtotime($comment['tanggal'])) ?>
+                                                </small>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <p class="mb-0"><?= nl2br(htmlspecialchars($comment['isi'])) ?></p>
                                 </div>
                             </div>
-                            <p class="mb-0"><?= nl2br(htmlspecialchars($comment['isi'])) ?></p>
                         </div>
-                    </div>
-                </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
                 <?php else: ?>
-                <div class="text-center py-5">
-                    <i class="bi bi-chat-dots text-muted fs-1"></i>
-                    <p class="text-muted mt-3">No comments yet. Be the first to comment!</p>
-                </div>
+                    <div class="text-center py-5">
+                        <i class="bi bi-chat-dots text-muted fs-1"></i>
+                        <p class="text-muted mt-3">No comments yet. Be the first to comment!</p>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>
@@ -221,57 +227,57 @@ $keywords = query("SELECT keyword FROM article_keywords WHERE artikel_id = $id")
 </div>
 
 <style>
-.card {
-    border: none;
-    border-radius: 10px;
-    overflow: hidden;
-}
+    .card {
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+    }
 
-.shadow-sm {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
-}
+    .shadow-sm {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    }
 
-.badge {
-    padding: 0.5em 1em;
-}
+    .badge {
+        padding: 0.5em 1em;
+    }
 
-.article-content {
-    font-size: 1.1rem;
-    line-height: 1.8;
-}
+    .article-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
 
-.comment-item {
-    transition: transform 0.2s;
-}
+    .comment-item {
+        transition: transform 0.2s;
+    }
 
-.comment-item:hover {
-    transform: translateX(5px);
-}
+    .comment-item:hover {
+        transform: translateX(5px);
+    }
 
-.input-group-text {
-    background-color: #f8f9fa;
-    border-right: none;
-}
+    .input-group-text {
+        background-color: #f8f9fa;
+        border-right: none;
+    }
 
-.input-group .form-control {
-    border-left: none;
-}
+    .input-group .form-control {
+        border-left: none;
+    }
 
-.input-group .form-control:focus {
-    border-color: #dee2e6;
-    box-shadow: none;
-}
+    .input-group .form-control:focus {
+        border-color: #dee2e6;
+        box-shadow: none;
+    }
 
-.article-content img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-    margin: 1rem 0;
-}
+    .article-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        margin: 1rem 0;
+    }
 
-.bg-primary {
-    background: linear-gradient(45deg, #007bff, #0056b3) !important;
-}
+    .bg-primary {
+        background: linear-gradient(45deg, #007bff, #0056b3) !important;
+    }
 </style>
 
 <?php require("views/partials/footer.php") ?>

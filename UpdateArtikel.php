@@ -11,11 +11,16 @@ if (!isset($_SESSION['UserId'])) {
     exit();
 }
 
+// Validasi CSRF Token
+if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
+    die("Invalid CSRF token. Coba kembali.");
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id = (int)$_POST["id"];
+    $id = (int) $_POST["id"];
     $judul = trim($_POST["judul"]);
     $isi = trim($_POST["isi"]);
-    $category_id = isset($_POST['category_id']) ? (int)$_POST['category_id'] : null;
+    $category_id = isset($_POST['category_id']) ? (int) $_POST['category_id'] : null;
     $keywords = isset($_POST['keywords']) ? trim($_POST['keywords']) : '';
     $userId = $_SESSION['UserId'];
     $current_time = date('Y-m-d H:i:s');
@@ -54,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
             $filename = $_FILES['gambar']['name'];
             $filetype = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-            
+
             // Validasi tipe file
             if (!in_array($filetype, $allowed)) {
                 throw new Exception("Hanya file JPG, JPEG, PNG, dan GIF yang diperbolehkan!");
@@ -81,12 +86,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $keywords = implode(', ', array_filter(array_map('trim', explode(',', $keywords))));
 
         // Update artikel
-        $sql = $update_image 
+        $sql = $update_image
             ? "UPDATE artikel SET judul=?, isi=?, category_id=?, keywords=?, gambar=?, tanggal=? WHERE id=? AND UserId=?"
             : "UPDATE artikel SET judul=?, isi=?, category_id=?, keywords=?, tanggal=? WHERE id=? AND UserId=?";
-        
+
         $stmt = $conn->prepare($sql);
-        
+
         if ($update_image) {
             $stmt->bind_param("ssisssii", $judul, $isi, $category_id, $keywords, $new_image_name, $current_time, $id, $userId);
         } else {
@@ -126,7 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     } catch (Exception $e) {
         $conn->rollback();
-        
+
         // Jika ada error dan gambar baru sudah diupload, hapus gambar tersebut
         if (isset($update_image) && $update_image && file_exists("img/" . $new_image_name)) {
             unlink("img/" . $new_image_name);

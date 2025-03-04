@@ -63,6 +63,7 @@ $categories = query("SELECT * FROM categories ORDER BY name ASC");
                         <div class="mb-3">
                             <label for="judul" class="form-label">Judul Artikel</label>
                             <input type="text" class="form-control" id="judul" name="judul" required>
+                            <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                         </div>
 
                         <div class="mb-3">
@@ -242,6 +243,7 @@ $categories = query("SELECT * FROM categories ORDER BY name ASC");
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                                     </div>
+                                    <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                                 </form>
                             </div>
                         </div>
