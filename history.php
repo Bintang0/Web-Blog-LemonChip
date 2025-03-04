@@ -6,6 +6,7 @@ if (!isset($_SESSION['UserId'])) {
     exit;
 }
 
+
 $userId = $_SESSION['UserId'];
 
 // Set default sorting dan filter

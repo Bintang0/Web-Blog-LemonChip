@@ -1,28 +1,33 @@
-<?php 
+<?php
 require 'functions.php';
 
 if (isset($_SESSION['login'])) {
-  header('Location: index.php');
-  exit;
+    header('Location: index.php');
+    exit;
 }
 
-if(isset($_POST["login"])) {
+if (isset($_POST["login"])) {
+
+    // Verifikasi CSRF Token
+    if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
+        die("Invalid CSRF token. Please try again.");
+    }
     $email = $_POST["email"];
     $password = $_POST["password"];
-  
+
     $result = mysqli_query($conn, "SELECT * FROM user WHERE email = '$email' ");
-  
+
     // cek email
-    if(mysqli_num_rows($result) === 1) {
-  
-      // cek password
-      $row = mysqli_fetch_assoc($result);
-      if( password_verify($password, $row["password"])) {
-        $_SESSION['login'] = true;
-        $_SESSION['UserId'] = $row['UserId'];
-        header('Location: index.php');
-        exit;
-      }
+    if (mysqli_num_rows($result) === 1) {
+
+        // cek password
+        $row = mysqli_fetch_assoc($result);
+        if (password_verify($password, $row["password"])) {
+            $_SESSION['login'] = true;
+            $_SESSION['UserId'] = $row['UserId'];
+            header('Location: index.php');
+            exit;
+        }
     }
     $error = true;
 }
@@ -49,11 +54,12 @@ if(isset($_POST["login"])) {
         </div>
 
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <?php if( isset($error)) : ?>
-            <p style="color: red;">username / password salah!</p>
+            <?php if (isset($error)): ?>
+                <p style="color: red;">username / password salah!</p>
             <?php endif; ?>
 
             <form class="space-y-6" action="" method="POST">
+                <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                 <div>
                     <label for="email" class="block text-sm/6 font-medium text-gray-900">Email</label>
                     <div class="mt-2">

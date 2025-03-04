@@ -1,15 +1,20 @@
-<?php 
+<?php
 require 'functions.php';
 if (isset($_POST['register'])) {
-  if (registrasi($_POST) > 0) {
-    echo "<script>
+    // Verifikasi CSRF Token
+    if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
+        die("Invalid CSRF token. Please try again.");
+    }
+
+    if (registrasi($_POST) > 0) {
+        echo "<script>
           alert('User Baru Berhasil Ditambahkan');
           document.location.href = 'login.php';
           </script>         
           ";
-  } else {
-    echo mysqli_error($conn);
-  }
+    } else {
+        echo mysqli_error($conn);
+    }
 }
 ?>
 
@@ -34,6 +39,7 @@ if (isset($_POST['register'])) {
 
         <div class="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
             <form class="space-y-6" method="POST">
+                <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                 <div>
                     <label for="nama" class="block text-sm/6 font-medium text-gray-900">Nama</label>
                     <div class="mt-2">
