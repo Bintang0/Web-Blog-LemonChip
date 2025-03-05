@@ -14,6 +14,15 @@ function query($query)
   return $rows;
 }
 
+
+// Function to sanitize and validate input
+function sanitizeInput($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+
 // Function to get user info from session
 function getUserInfo()
 {
@@ -27,8 +36,8 @@ function getUserInfo()
   // If user is logged in, update the values
   if (isset($_SESSION['login']) && isset($_SESSION['UserId'])) {
     $userInfo['isLoggedIn'] = true;
-    $userInfo['userId'] = $_SESSION['UserId'];
-    $userInfo['nama'] = $_SESSION['nama'] ?? 'Guest';
+    $userInfo['userId'] = (int)$_SESSION['UserId'];
+    $userInfo['nama'] = isset($_SESSION['nama']) ? sanitizeInput($_SESSION['nama']) : 'Guest';
   }
 
   return $userInfo;
@@ -45,9 +54,12 @@ function registrasi($data)
 
 
   //cek nama sudah ada atau belum
-  $result = mysqli_query($conn, "SELECT nama FROM user WHERE nama = '$nama'");
+  $stmt = $conn->prepare("SELECT nama FROM user WHERE nama = ?");
+  $stmt->bind_param("s", $nama);
+  $stmt->execute();
+  $result = $stmt->get_result();
 
-  if (mysqli_fetch_assoc($result)) {
+  if ($result->fetch_assoc()) {
     echo " <script>
                 alert('nama sudah terdaftar');    
             </script> 
@@ -68,11 +80,14 @@ function registrasi($data)
   $password = password_hash($password, PASSWORD_DEFAULT);
 
   //tambahkan userbaru ke database
-  mysqli_query($conn, "INSERT INTO user VALUES(null, '$nama', '$email', '$password', 'user')");
+  $stmt = $conn->prepare("INSERT INTO user VALUES(null, ?, ?, ?, 'user')");
+  $stmt->bind_param("sss", $nama, $email, $password);
+  $stmt->execute();
 
-  return mysqli_affected_rows($conn);
+  return $stmt->affected_rows;
 }
 
+// CSRF token functions
 function generateCSRFToken()
 {
   if (!isset($_SESSION['csrf_token'])) {
@@ -84,5 +99,14 @@ function generateCSRFToken()
 function verifyCSRFToken($token)
 {
   return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+}
+
+// Validasi GET parameter ID
+function validateId($id) {
+  $id = filter_var($id, FILTER_VALIDATE_INT);
+  if ($id === false || $id <= 0) {
+    return false;
+  }
+  return $id;
 }
 ?>
