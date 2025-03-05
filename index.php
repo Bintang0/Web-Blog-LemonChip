@@ -1,5 +1,15 @@
 <?php require('functions.php'); ?>
 <?php
+
+// Validate GET parameters
+$validParams = ['page', 'category', 'search'];
+foreach ($_GET as $key => $value) {
+    if (!in_array($key, $validParams)) {
+        unset($_GET[$key]);
+    }
+}
+
+
 $all = query('SELECT * FROM artikel WHERE status="Dipublish" ORDER BY tanggal DESC LIMIT 2');
 
 // Get featured articles

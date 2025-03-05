@@ -1,6 +1,14 @@
 <?php
 require 'functions.php';
 
+// Validate GET parameters
+$validParams = ['id'];
+foreach ($_GET as $key => $value) {
+    if (!in_array($key, $validParams)) {
+        unset($_GET[$key]);
+    }
+}
+
 // Get article ID
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 if (!$id) {

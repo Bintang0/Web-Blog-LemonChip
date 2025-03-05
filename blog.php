@@ -1,6 +1,15 @@
 <?php
 require 'functions.php';
 
+// Validate GET parameters
+$validParams = ['page', 'category', 'search'];
+foreach ($_GET as $key => $value) {
+    if (!in_array($key, $validParams)) {
+        unset($_GET[$key]);
+    }
+}
+
+
 // Get current page from URL parameter
 $page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1; // Memastikan page >= 1
 $category = isset($_GET['category']) ? (int) $_GET['category'] : null; // Memastikan category adalah integer atau null
