@@ -1,7 +1,7 @@
 <?php
 require 'functions.php';
 
-// Validate GET parameters
+// validasi GET parameters
 $validParams = ['id'];
 foreach ($_GET as $key => $value) {
     if (!in_array($key, $validParams)) {
@@ -9,18 +9,14 @@ foreach ($_GET as $key => $value) {
     }
 }
 
-// Get article ID
-$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
-if (!$id) {
+// Get article ID dan validasi
+if (!isset($_GET['id']) || !is_numeric($_GET['id']) || $_GET['id'] <= 0) {
     header("Location: blog.php");
     exit;
 }
 
+$id = (int) $_GET['id'];
 
-// Validasi parameter GET 'id'
-if (!isset($_GET['id']) || !is_numeric($_GET['id']) || $_GET['id'] <= 0) {
-    die("ID artikel tidak valid.");
-}
 
 // Get user info from session
 $userInfo = getUserInfo();
@@ -30,9 +26,12 @@ $isLoggedIn = $userInfo['isLoggedIn'];
 
 
 if ($isLoggedIn) {
-    $sql = "SELECT nama FROM user WHERE UserId = $userId";
-    $result = query($sql);
-    $userLogin = $result[0]['nama'] ?? 'Guest';
+    $sql = "SELECT nama FROM user WHERE UserId = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $userLogin = $result->num_rows > 0 ? $result->fetch_assoc()['nama'] : 'Guest';
 }
 
 // Set timezone and format
@@ -44,8 +43,12 @@ $sql = "SELECT a.*, c.name as category_name, u.nama as author_name
         FROM artikel a 
         LEFT JOIN categories c ON a.category_id = c.id 
         LEFT JOIN user u ON a.UserId = u.UserId 
-        WHERE a.id = $id AND a.status = 'Dipublish'";
-$articles = query($sql);
+        WHERE a.id = ? AND a.status = 'Dipublish'";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+$articles = $result->fetch_all(MYSQLI_ASSOC);
 
 if (empty($articles)) {
     header("Location: blog.php");
@@ -53,32 +56,44 @@ if (empty($articles)) {
 }
 $article = $articles[0];
 
+
 // Handle comment submission
 if (isset($_POST['submit_comment'])) {
+    // Verifikasi CSRF Token
+    if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
+        die("Invalid CSRF token. Please try again.");
+    }
+
     $comment = trim($_POST['comment']);
 
     if (!empty($comment)) {
-        $comment = mysqli_real_escape_string($conn, $comment);
+        $comment = htmlspecialchars($comment); // Sanitasi untuk mencegah XSS
 
         if ($isLoggedIn) {
-            $sql = "INSERT INTO comments (artikel_id, isi, nama, UserId) 
-                    VALUES ($id, '$comment', '$userLogin', $userId)";
+            $sql = "INSERT INTO comments (artikel_id, isi, nama, UserId, tanggal) 
+                    VALUES (?, ?, ?, ?, NOW())";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("issi", $id, $comment, $userLogin, $userId);
         } else {
             $guestName = trim($_POST['guest_name']);
             if (!empty($guestName)) {
-                $guestName = mysqli_real_escape_string($conn, $guestName);
-                $sql = "INSERT INTO comments (artikel_id, isi, nama, guest_name) 
-                        VALUES ($id, '$comment', '$guestName', '$guestName')";
+                $guestName = htmlspecialchars($guestName);
+                $sql = "INSERT INTO comments (artikel_id, isi, nama, guest_name, tanggal) 
+                        VALUES (?, ?, ?, ?, NOW())";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("isss", $id, $comment, $guestName, $guestName);
             }
         }
 
-        if (isset($sql)) {
-            mysqli_query($conn, $sql);
+        if (isset($stmt) && $stmt->execute()) {
             header("Location: detail.php?id=$id#comments");
             exit;
+        } else {
+            echo "Error: " . $stmt->error;
         }
     }
 }
+
 
 // Get comments
 $sql = "SELECT c.*, 
@@ -86,12 +101,22 @@ $sql = "SELECT c.*,
         CASE WHEN c.UserId IS NOT NULL THEN 'Member' ELSE 'Guest' END as user_type
         FROM comments c 
         LEFT JOIN user u ON c.UserId = u.UserId 
-        WHERE c.artikel_id = $id 
+        WHERE c.artikel_id = ? 
         ORDER BY c.tanggal DESC";
-$comments = query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+$comments = $result->fetch_all(MYSQLI_ASSOC);
+
 
 // Get keywords
-$keywords = query("SELECT keyword FROM article_keywords WHERE artikel_id = $id");
+$sql = "SELECT keyword FROM article_keywords WHERE artikel_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+$keywords = $result->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <?php require("views/partials/header.php") ?>
