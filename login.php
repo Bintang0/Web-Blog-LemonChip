@@ -15,7 +15,11 @@ if (isset($_POST["login"])) {
     $email = $_POST["email"];
     $password = $_POST["password"];
 
-    $result = mysqli_query($conn, "SELECT * FROM user WHERE email = '$email' ");
+    // Prepare statement
+    $stmt = $conn->prepare("SELECT * FROM user WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     // cek email
     if (mysqli_num_rows($result) === 1) {
