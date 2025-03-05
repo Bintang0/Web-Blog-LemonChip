@@ -16,8 +16,10 @@ if (isset($_SESSION['UserId'])) {
     $UserId = $_SESSION['UserId']; // Ambil UserId dari session
 
     // Ambil nama pengguna berdasarkan UserId
-    $sql_nama = "SELECT nama FROM user WHERE UserId = $UserId";
-    $result = $conn->query($sql_nama);
+    $stmt = $conn->prepare("SELECT nama FROM user WHERE UserId = ?");
+    $stmt->bind_param("i", $UserId);
+    $stmt->execute();
+    $result = $stmt->get_result();
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $nama = $row['nama']; // Ambil nama pengguna
@@ -26,13 +28,14 @@ if (isset($_SESSION['UserId'])) {
     }
 }
 
-$sql = "INSERT INTO comments (artikel_id, isi, nama, tanggal, UserId) 
-        VALUES ('$artikel_id', '$comment', '$nama', NOW(), " . ($UserId ? $UserId : "NULL") . ")";
+// Prepare statement
+$stmt = $conn->prepare("INSERT INTO comments (artikel_id, isi, nama, tanggal, UserId) VALUES (?, ?, ?, NOW(), ?)");
+$stmt->bind_param("issi", $artikel_id, $comment, $nama, $UserId);
 
-if ($conn->query($sql) === TRUE) {
+if ($stmt->execute() === TRUE) {
     echo "New comment created successfully";
 } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    echo "Error: " . $stmt->error;
 }
 
 $conn->close();
