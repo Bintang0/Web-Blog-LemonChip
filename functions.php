@@ -14,6 +14,18 @@ function query($query)
   return $rows;
 }
 
+// Function to write logs
+function writeLog($message, $type = "INFO") {
+    date_default_timezone_set('Asia/Jakarta'); // Set zona waktu ke WIB
+    $logFile = __DIR__ . '/logs/activity.log';
+    $date = date("Y-m-d H:i:s");
+    $ip = $_SERVER['REMOTE_ADDR'] ?? 'UNKNOWN';
+
+    $logMessage = "[$date][$type][$ip] $message" . PHP_EOL;
+
+    file_put_contents($logFile, $logMessage, FILE_APPEND);
+}
+
 
 // Function to sanitize and validate input
 function sanitizeInput($data) {

@@ -1,18 +1,22 @@
 <?php
 require 'functions.php';
+
 if (isset($_POST['register'])) {
     // Verifikasi CSRF Token
     if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
+        writeLog("CSRF token tidak valid saat registrasi", "ERROR");
         die("Invalid CSRF token. Please try again.");
     }
 
+    // Jalankan fungsi registrasi
     if (registrasi($_POST) > 0) {
+        writeLog("Registrasi berhasil: " . $_POST['email'], "INFO");
         echo "<script>
-          alert('User Baru Berhasil Ditambahkan');
-          document.location.href = 'login.php';
-          </script>         
-          ";
+            alert('User Baru Berhasil Ditambahkan');
+            document.location.href = 'login.php';
+            </script>";
     } else {
+        writeLog("Registrasi gagal: " . mysqli_error($conn), "ERROR");
         echo mysqli_error($conn);
     }
 }

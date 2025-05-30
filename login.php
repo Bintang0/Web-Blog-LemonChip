@@ -10,8 +10,21 @@ if (isset($_POST["login"])) {
 
     // Verifikasi CSRF Token
     if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
+        writeLog("Token CSRF tidak valid saat login", "ERROR");
         die("Invalid CSRF token. Please try again.");
     }
+
+    // Verifikasi CAPTCHA
+    $captcha = $_POST['g-recaptcha-response'];
+    $secretKey = '6LfkW1ArAAAAAOWlRbD5gk05nnnfW9cit5JAFD8O'; // Ganti dengan secret key kamu
+    $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$secretKey&response=$captcha");
+    $responseKeys = json_decode($response, true);
+
+    if (!$responseKeys["success"]) {
+        writeLog("Captcha tidak valid saat login", "ERROR");
+        die("Captcha tidak valid. Silakan coba lagi.");
+    }
+
     $email = $_POST["email"];
     $password = $_POST["password"];
 
@@ -24,18 +37,28 @@ if (isset($_POST["login"])) {
     // cek email
     if (mysqli_num_rows($result) === 1) {
 
-        // cek password
         $row = mysqli_fetch_assoc($result);
+
+        // cek password
         if (password_verify($password, $row["password"])) {
             $_SESSION['login'] = true;
             $_SESSION['UserId'] = $row['UserId'];
+            writeLog("Login berhasil untuk email: $email", "INFO");
             header('Location: index.php');
             exit;
+        } else {
+            writeLog("Login gagal: password salah untuk email: $email", "WARNING");
         }
+
+    } else {
+        writeLog("Login gagal: email tidak ditemukan ($email)", "WARNING");
     }
+
     $error = true;
 }
 ?>
+
+
 
 
 
@@ -83,6 +106,9 @@ if (isset($_POST["login"])) {
                     </div>
                 </div>
 
+                <!-- CAPTCHA -->
+                <div class="g-recaptcha" data-sitekey="6LfkW1ArAAAAAJ2MTV-cgy4HKmLva_IHgT1NIK-4"></div>
+
                 <div>
                     <button type="submit" name="login"
                         class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">Masuk</button>
@@ -96,7 +122,7 @@ if (isset($_POST["login"])) {
         </div>
     </div>
 
-
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 </body>
 
