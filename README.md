@@ -1,4 +1,4 @@
-<h1>Tugas web Blog Keamanan Perangkat Lunak Kelas B </h1>
+<h1>Project Web Blog Keamanan Perangkat Lunak</h1>
 <br>
 <p>Ketua Kelompok : Bintang Arya - 223040032</p>
 <p>Anggota Kelompok :</p>
